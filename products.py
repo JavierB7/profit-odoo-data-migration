@@ -1,29 +1,35 @@
 import xlwt
 import xlrd
 
-PRODUCTS_SHEET = 7
-HEADERS_ROW = 0
-ATTRIBUTES_COLUMN = 8
-VALUES_ATTRIBUTES_COLUMN = 9
-PRODUCT_CODE_COLUMN = 10
+# This script is to process the information of the product and generate another xls file with their attributes
+# in the format that Odoo expects. The new file is divided into several sheets for the upload process in Odoo.
 
-workbook_data = xlrd.open_workbook('data.xls')
-sheet_products = workbook_data.sheet_by_index(PRODUCTS_SHEET)
+DATA_FILE_NAME = "data_inicial.xls"
+PRODUCT_FILE_NAME = "products.xls"
+PRODUCTS_SHEET_NUMBER = 7
+HEADERS_ROW = 0
+MODEL_COLUMN = 7
+WARRANTY_COLUMN = 8
+BRAND_COLUMN = 9
+ATTRIBUTES_COLUMN = 25
+VALUES_ATTRIBUTES_COLUMN = 26
+ATTRIBUTES_COLUMN_HEADER = "Atributos del producto / Atributo"
+VALUES_ATTRIBUTES_COLUMN_HEADER = "Atributos del producto / Valores"
+
+workbook_data = xlrd.open_workbook(DATA_FILE_NAME)
+sheet_products = workbook_data.sheet_by_index(PRODUCTS_SHEET_NUMBER)
 
 write_workbook = xlwt.Workbook()
-new_sheet = write_workbook.add_sheet('test')
+new_sheet = write_workbook.add_sheet("test0")
 
 headers = [sheet_products.cell_value(0, col) for col in range(sheet_products.ncols)]
 
-
 def write_headers_in_sheet(sheet):
     for cell_index, cell_value in enumerate(headers):
-        if cell_index < 8:
+        if cell_index not in [MODEL_COLUMN, WARRANTY_COLUMN, BRAND_COLUMN]:
             sheet.write(HEADERS_ROW, cell_index, cell_value)
-        if cell_index > PRODUCT_CODE_COLUMN:
-            sheet.write(HEADERS_ROW, PRODUCT_CODE_COLUMN, cell_value)
-    sheet.write(HEADERS_ROW, ATTRIBUTES_COLUMN, "Atributos del producto / Atributo")
-    sheet.write(HEADERS_ROW, VALUES_ATTRIBUTES_COLUMN, "Atributos del producto / Valores")
+    sheet.write(HEADERS_ROW, ATTRIBUTES_COLUMN, ATTRIBUTES_COLUMN_HEADER)
+    sheet.write(HEADERS_ROW, VALUES_ATTRIBUTES_COLUMN, VALUES_ATTRIBUTES_COLUMN_HEADER)
 
 
 custom_row = 1
@@ -42,26 +48,24 @@ for row in range(sheet_products.nrows):
     for col in range(sheet_products.ncols):
         products_row.append(sheet_products.cell_value(row, col))
     for index, value in enumerate(products_row):
-        if index < ATTRIBUTES_COLUMN:
+        if index not in [MODEL_COLUMN, WARRANTY_COLUMN, BRAND_COLUMN]:
             custom_sheet.write(custom_row, index, value)
-        if index > PRODUCT_CODE_COLUMN:
-            custom_sheet.write(custom_row, PRODUCT_CODE_COLUMN, value)
-    model = products_row[8]
+    model = products_row[MODEL_COLUMN]
     if model is not '':
         custom_sheet.write(custom_row, ATTRIBUTES_COLUMN, "Modelo")
         custom_sheet.write(custom_row, VALUES_ATTRIBUTES_COLUMN, model)
         custom_row = custom_row + 1
-    warranty = products_row[9]
+    warranty = products_row[WARRANTY_COLUMN]
     if warranty is not '':
         custom_sheet.write(custom_row, ATTRIBUTES_COLUMN, "Garantia")
         custom_sheet.write(custom_row, VALUES_ATTRIBUTES_COLUMN, warranty)
         custom_row = custom_row + 1
-    brand = products_row[10]
+    brand = products_row[BRAND_COLUMN]
     if brand is not '':
         custom_sheet.write(custom_row, ATTRIBUTES_COLUMN, "Marca")
         custom_sheet.write(custom_row, VALUES_ATTRIBUTES_COLUMN, brand)
         custom_row = custom_row + 1
 
 
-write_workbook.save('products.xls')
-
+write_workbook.save(PRODUCT_FILE_NAME)
+print(f"File {PRODUCT_FILE_NAME} created!")
