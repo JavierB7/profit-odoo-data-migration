@@ -26,6 +26,7 @@ def get_list_of_codes_with_image():
     sheet_cd = code_and_url_data.sheet_by_index(0)
     return [sheet_cd.cell_value(sheet_row, 0) for sheet_row in range(sheet_cd.nrows)]
 
+codes = get_list_of_codes_with_image()
 
 def code_image_in_web(code):
     url = get_image_url(code)
@@ -41,7 +42,6 @@ def code_image_in_web(code):
 
 
 def match_code_with_image(code):
-    codes = get_list_of_codes_with_image()
     return code in codes
 
 
