@@ -149,7 +149,7 @@ if __name__ == "__main__":
     workbook_stocks = xlrd.open_workbook(STOCK_FILE_NAME)
     sheet_stocks = workbook_stocks.sheet_by_index(0)
     workbook_inventory = xlrd.open_workbook(INVENTORY_FILE_NAME)
-    sheet_inventory = workbook_inventory.sheet_by_index(0)
+    sheet_inventory = workbook_inventory.sheet_by_index(5)
 
     write_workbook = xlwt.Workbook()
     new_sheet_inventory1 = write_workbook.add_sheet('inventory1')
