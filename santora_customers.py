@@ -34,8 +34,8 @@ NEW_HEADERS_COLUMNS = {
     "city": 3,
     "mobile": 4,
     "phone": 5,
-    "Website Link": 6,
-    "email": 7,
+    "email": 6,
+    "Website Link": 7,
     "Contact/Name": 8,
     "Contact/Mobile": 9,
     "Contact/Address Type": 10,
@@ -94,6 +94,7 @@ def write_values(o_sheet, n_sheet):
             if header_value == "Email1" and value:
                 n_sheet.write(write_row, NEW_HEADERS_COLUMNS["email"], value.strip())
             if header_value == "Web" and value:
+                print(value)
                 n_sheet.write(write_row, NEW_HEADERS_COLUMNS["Website Link"], value.strip())
 
             # Adding child contacts
