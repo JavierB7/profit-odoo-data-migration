@@ -17,6 +17,7 @@ write_workbook = xlwt.Workbook()
 new_sheet = write_workbook.add_sheet("customers")
 
 HEADERS_MAP = {
+    "KNr": "ref",
     "Name1": "name",
     "Strasse": "street",
     "PLZ": "zip",
@@ -28,17 +29,18 @@ HEADERS_MAP = {
 }
 OLD_HEADERS_COLUMNS = {}
 NEW_HEADERS_COLUMNS = {
-    "name": 0,
-    "street": 1,
-    "zip": 2,
-    "city": 3,
-    "mobile": 4,
-    "phone": 5,
-    "email": 6,
-    "Website Link": 7,
-    "Contact/Name": 8,
-    "Contact/Mobile": 9,
-    "Contact/Address Type": 10,
+    "ref": 0,
+    "name": 1,
+    "street": 2,
+    "zip": 3,
+    "city": 4,
+    "mobile": 5,
+    "phone": 6,
+    "email": 7,
+    "Website Link": 8,
+    "Contact/Name": 9,
+    "Contact/Mobile": 10,
+    "Contact/Address Type": 11,
 }
 
 
@@ -85,6 +87,8 @@ def write_values(o_sheet, n_sheet):
             value = o_sheet.cell_value(row, col)
             if header_value == "Name1" or header_value == "Name2":
                 name = name + " " + value if name else name + value
+            if header_value == "KNr" and value:
+                n_sheet.write(write_row, NEW_HEADERS_COLUMNS["ref"], value)
             if header_value == "Strasse" and value:
                 n_sheet.write(write_row, NEW_HEADERS_COLUMNS["street"], value.strip())
             if header_value == "PLZ" and value:
